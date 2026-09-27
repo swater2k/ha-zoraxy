@@ -1,0 +1,254 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Zoraxy",
+        "description": "Connect a Zoraxy reverse proxy. Use the internal address of the web interface, not a proxied domain.",
+        "data": {
+          "url": "Zoraxy URL",
+          "username": "Username",
+          "password": "Password",
+          "verify_ssl": "Verify SSL certificate"
+        },
+        "data_description": {
+          "url": "Address of the Zoraxy web interface, for example {example_url}. Without a scheme, http and port 8000 are assumed.",
+          "username": "Zoraxy admin user. Zoraxy has no restricted roles, so the integration has full access.",
+          "password": "Stored in the config entry and hidden in diagnostics.",
+          "verify_ssl": "Only relevant for https. Turn off for self-signed certificates."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Sign in again",
+        "description": "Zoraxy at {url} rejected the stored credentials.",
+        "data": {
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "reconfigure": {
+        "title": "Zoraxy",
+        "description": "Change the connection settings.",
+        "data": {
+          "url": "Zoraxy URL",
+          "username": "Username",
+          "password": "Password",
+          "verify_ssl": "Verify SSL certificate"
+        },
+        "data_description": {
+          "url": "Address of the Zoraxy web interface, for example {example_url}. Without a scheme, http and port 8000 are assumed.",
+          "username": "Zoraxy admin user. Zoraxy has no restricted roles, so the integration has full access.",
+          "password": "Stored in the config entry and hidden in diagnostics.",
+          "verify_ssl": "Only relevant for https. Turn off for self-signed certificates."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Zoraxy not reachable, or the address is not a Zoraxy web interface.",
+      "invalid_auth": "Username or password rejected.",
+      "invalid_response": "Zoraxy answered with an error.",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This Zoraxy instance is already configured.",
+      "reauth_successful": "Signed in again.",
+      "reconfigure_successful": "Reconfiguration successful.",
+      "different_instance": "The address belongs to a different Zoraxy instance."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Zoraxy options",
+        "description": "Control functions are off by default.",
+        "data": {
+          "scan_interval": "Polling interval",
+          "uptime_interval": "Uptime interval",
+          "control_hosts": "Control: proxy hosts",
+          "control_proxy": "Control: whole proxy",
+          "control_access": "Control: access rules",
+          "control_streams": "Control: stream proxies",
+          "control_redirects": "Control: redirects",
+          "control_certificates": "Control: certificates"
+        },
+        "data_description": {
+          "scan_interval": "How often hosts, statistics and certificates are read.",
+          "uptime_interval": "How often the uptime monitor is read. Zoraxy checks upstreams every 5 minutes and returns a whole day of history, so polling more often only costs traffic.",
+          "control_hosts": "One switch per proxy host to enable or disable it.",
+          "control_proxy": "A switch that stops or starts the whole reverse proxy – all hosts at once.",
+          "control_access": "Switches for blacklist and whitelist per access rule, plus the actions block IP and unblock IP.",
+          "control_streams": "One switch per TCP/UDP stream proxy.",
+          "control_redirects": "One switch per redirect rule.",
+          "control_certificates": "A button that starts the ACME renewal right away."
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "proxy_running": {
+        "name": "Proxy running"
+      },
+      "upstream_online": {
+        "name": "Upstream online"
+      },
+      "host_enabled": {
+        "name": "Enabled"
+      },
+      "blacklist": {
+        "name": "Blacklist {name}"
+      },
+      "whitelist": {
+        "name": "Whitelist {name}"
+      },
+      "stream": {
+        "name": "Stream {name}"
+      },
+      "redirect": {
+        "name": "Redirect {name}"
+      }
+    },
+    "sensor": {
+      "requests_today": {
+        "name": "Requests today"
+      },
+      "errors_today": {
+        "name": "Errors today"
+      },
+      "valid_today": {
+        "name": "Successful requests today"
+      },
+      "visitors_today": {
+        "name": "Unique visitors today"
+      },
+      "received_today": {
+        "name": "Received today"
+      },
+      "sent_today": {
+        "name": "Sent today"
+      },
+      "active_connections": {
+        "name": "Active connections"
+      },
+      "proxy_hosts": {
+        "name": "Proxy hosts"
+      },
+      "expired_certificates": {
+        "name": "Expired certificates"
+      },
+      "started": {
+        "name": "Started"
+      },
+      "version": {
+        "name": "Version"
+      },
+      "cpu": {
+        "name": "CPU usage"
+      },
+      "memory": {
+        "name": "Memory usage"
+      },
+      "disk": {
+        "name": "Disk usage"
+      },
+      "certificate": {
+        "name": "Certificate {name}"
+      },
+      "latency": {
+        "name": "Latency"
+      },
+      "availability": {
+        "name": "Availability"
+      },
+      "upstream": {
+        "name": "Upstream"
+      },
+      "status_code": {
+        "name": "Status code"
+      },
+      "last_check": {
+        "name": "Last check"
+      }
+    },
+    "switch": {
+      "proxy": {
+        "name": "Reverse proxy"
+      },
+      "host": {
+        "name": "Enabled"
+      },
+      "blacklist": {
+        "name": "Blacklist {name}"
+      },
+      "whitelist": {
+        "name": "Whitelist {name}"
+      },
+      "stream": {
+        "name": "Stream {name}"
+      },
+      "redirect": {
+        "name": "Redirect {name}"
+      }
+    },
+    "button": {
+      "renew_certificates": {
+        "name": "Renew certificates"
+      }
+    }
+  },
+  "exceptions": {
+    "control_disabled": {
+      "message": "This action is turned off in the options of {title}."
+    },
+    "entry_not_found": {
+      "message": "Zoraxy entry not found or not loaded."
+    },
+    "entry_ambiguous": {
+      "message": "Several Zoraxy instances are configured, choose one."
+    },
+    "rule_not_found": {
+      "message": "Access rule {rule} not found."
+    }
+  },
+  "services": {
+    "block_ip": {
+      "name": "Block IP",
+      "description": "Adds an address to the blacklist of an access rule. The blacklist of the rule must be enabled to take effect.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Zoraxy instance",
+          "description": "Only needed if several instances are configured."
+        },
+        "ip": {
+          "name": "IP address",
+          "description": "Single address or range in CIDR notation."
+        },
+        "rule": {
+          "name": "Access rule",
+          "description": "Name or ID of the access rule, default is the rule used by all hosts."
+        },
+        "comment": {
+          "name": "Comment",
+          "description": "Note shown in Zoraxy."
+        }
+      }
+    },
+    "unblock_ip": {
+      "name": "Unblock IP",
+      "description": "Removes an address from the blacklist of an access rule.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Zoraxy instance",
+          "description": "Only needed if several instances are configured."
+        },
+        "ip": {
+          "name": "IP address",
+          "description": "Single address or range in CIDR notation."
+        },
+        "rule": {
+          "name": "Access rule",
+          "description": "Name or ID of the access rule, default is the rule used by all hosts."
+        }
+      }
+    }
+  }
+}

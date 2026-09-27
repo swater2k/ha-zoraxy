@@ -1,0 +1,9 @@
+{
+ "Option": {
+  "HostUUID": "00000000-1111-2222-3333-444444444444",
+  "HostVersion": "3.3.5",
+  "Port": 443
+ },
+ "Running": true,
+ "Root": null
+}

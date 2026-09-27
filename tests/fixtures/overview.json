@@ -1,0 +1,19 @@
+{
+ "SystemUptime": 180000,
+ "ProxyRunning": true,
+ "TotalRequestToday": 1234,
+ "ErrorRequestToday": 12,
+ "ValidRequestToday": 1222,
+ "UniqueVisitorsToday": 5,
+ "BandwidthRxToday": 52428800,
+ "BandwidthTxToday": 104857600,
+ "ActiveConnections": 7,
+ "ProxyHostCount": 4,
+ "UpstreamCount": 4,
+ "Yesterday": {
+  "TotalRequest": 2000,
+  "ErrorRequest": 20,
+  "ValidRequest": 1980,
+  "UniqueVisitors": 6
+ }
+}

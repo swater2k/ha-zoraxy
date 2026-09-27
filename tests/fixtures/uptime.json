@@ -1,0 +1,368 @@
+{
+ "adguard.example.net": [
+  {
+   "Timestamp": 1790538889,
+   "ID": "adguard.example.net",
+   "Name": "adguard.example.net",
+   "URL": "https://192.0.2.84:443",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 10
+  },
+  {
+   "Timestamp": 1790539189,
+   "ID": "adguard.example.net",
+   "Name": "adguard.example.net",
+   "URL": "https://192.0.2.84:443",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 6
+  },
+  {
+   "Timestamp": 1790539489,
+   "ID": "adguard.example.net",
+   "Name": "adguard.example.net",
+   "URL": "https://192.0.2.84:443",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 9
+  },
+  {
+   "Timestamp": 1790539789,
+   "ID": "adguard.example.net",
+   "Name": "adguard.example.net",
+   "URL": "https://192.0.2.84:443",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 53
+  },
+  {
+   "Timestamp": 1790540089,
+   "ID": "adguard.example.net",
+   "Name": "adguard.example.net",
+   "URL": "https://192.0.2.84:443",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 24
+  },
+  {
+   "Timestamp": 1790540389,
+   "ID": "adguard.example.net",
+   "Name": "adguard.example.net",
+   "URL": "https://192.0.2.84:443",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 6
+  },
+  {
+   "Timestamp": 1790540689,
+   "ID": "adguard.example.net",
+   "Name": "adguard.example.net",
+   "URL": "https://192.0.2.84:443",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 7
+  },
+  {
+   "Timestamp": 1790540989,
+   "ID": "adguard.example.net",
+   "Name": "adguard.example.net",
+   "URL": "https://192.0.2.84:443",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 20
+  },
+  {
+   "Timestamp": 1790541289,
+   "ID": "adguard.example.net",
+   "Name": "adguard.example.net",
+   "URL": "https://192.0.2.84:443",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 7
+  },
+  {
+   "Timestamp": 1790541589,
+   "ID": "adguard.example.net",
+   "Name": "adguard.example.net",
+   "URL": "https://192.0.2.84:443",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 7
+  },
+  {
+   "Timestamp": 1790541889,
+   "ID": "adguard.example.net",
+   "Name": "adguard.example.net",
+   "URL": "https://192.0.2.84:443",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 7
+  },
+  {
+   "Timestamp": 1790542189,
+   "ID": "adguard.example.net",
+   "Name": "adguard.example.net",
+   "URL": "https://192.0.2.84:443",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 9
+  }
+ ],
+ "ha.example.net": [
+  {
+   "Timestamp": 1790538889,
+   "ID": "ha.example.net",
+   "Name": "ha.example.net",
+   "URL": "http://192.0.2.80:8123",
+   "Protocol": "http",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 5
+  },
+  {
+   "Timestamp": 1790539189,
+   "ID": "ha.example.net",
+   "Name": "ha.example.net",
+   "URL": "http://192.0.2.80:8123",
+   "Protocol": "http",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 4
+  },
+  {
+   "Timestamp": 1790539489,
+   "ID": "ha.example.net",
+   "Name": "ha.example.net",
+   "URL": "http://192.0.2.80:8123",
+   "Protocol": "http",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 4
+  },
+  {
+   "Timestamp": 1790539789,
+   "ID": "ha.example.net",
+   "Name": "ha.example.net",
+   "URL": "http://192.0.2.80:8123",
+   "Protocol": "http",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 2
+  },
+  {
+   "Timestamp": 1790540089,
+   "ID": "ha.example.net",
+   "Name": "ha.example.net",
+   "URL": "http://192.0.2.80:8123",
+   "Protocol": "http",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 9
+  },
+  {
+   "Timestamp": 1790540389,
+   "ID": "ha.example.net",
+   "Name": "ha.example.net",
+   "URL": "http://192.0.2.80:8123",
+   "Protocol": "http",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 3
+  },
+  {
+   "Timestamp": 1790540689,
+   "ID": "ha.example.net",
+   "Name": "ha.example.net",
+   "URL": "http://192.0.2.80:8123",
+   "Protocol": "http",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 6
+  },
+  {
+   "Timestamp": 1790540989,
+   "ID": "ha.example.net",
+   "Name": "ha.example.net",
+   "URL": "http://192.0.2.80:8123",
+   "Protocol": "http",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 547
+  },
+  {
+   "Timestamp": 1790541289,
+   "ID": "ha.example.net",
+   "Name": "ha.example.net",
+   "URL": "http://192.0.2.80:8123",
+   "Protocol": "http",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 3
+  },
+  {
+   "Timestamp": 1790541589,
+   "ID": "ha.example.net",
+   "Name": "ha.example.net",
+   "URL": "http://192.0.2.80:8123",
+   "Protocol": "http",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 5
+  },
+  {
+   "Timestamp": 1790541889,
+   "ID": "ha.example.net",
+   "Name": "ha.example.net",
+   "URL": "http://192.0.2.80:8123",
+   "Protocol": "http",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 2
+  },
+  {
+   "Timestamp": 1790542189,
+   "ID": "ha.example.net",
+   "Name": "ha.example.net",
+   "URL": "http://192.0.2.80:8123",
+   "Protocol": "http",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 4
+  }
+ ],
+ "pbs.example.net": [
+  {
+   "Timestamp": 1790538889,
+   "ID": "pbs.example.net",
+   "Name": "pbs.example.net",
+   "URL": "https://192.0.2.138:8007",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 10
+  },
+  {
+   "Timestamp": 1790539189,
+   "ID": "pbs.example.net",
+   "Name": "pbs.example.net",
+   "URL": "https://192.0.2.138:8007",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 8
+  },
+  {
+   "Timestamp": 1790539489,
+   "ID": "pbs.example.net",
+   "Name": "pbs.example.net",
+   "URL": "https://192.0.2.138:8007",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 9
+  },
+  {
+   "Timestamp": 1790539789,
+   "ID": "pbs.example.net",
+   "Name": "pbs.example.net",
+   "URL": "https://192.0.2.138:8007",
+   "Protocol": "https",
+   "Online": false,
+   "StatusCode": 200,
+   "Latency": 10
+  },
+  {
+   "Timestamp": 1790540089,
+   "ID": "pbs.example.net",
+   "Name": "pbs.example.net",
+   "URL": "https://192.0.2.138:8007",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 13
+  },
+  {
+   "Timestamp": 1790540389,
+   "ID": "pbs.example.net",
+   "Name": "pbs.example.net",
+   "URL": "https://192.0.2.138:8007",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 10
+  },
+  {
+   "Timestamp": 1790540689,
+   "ID": "pbs.example.net",
+   "Name": "pbs.example.net",
+   "URL": "https://192.0.2.138:8007",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 9
+  },
+  {
+   "Timestamp": 1790540989,
+   "ID": "pbs.example.net",
+   "Name": "pbs.example.net",
+   "URL": "https://192.0.2.138:8007",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 21
+  },
+  {
+   "Timestamp": 1790541289,
+   "ID": "pbs.example.net",
+   "Name": "pbs.example.net",
+   "URL": "https://192.0.2.138:8007",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 9
+  },
+  {
+   "Timestamp": 1790541589,
+   "ID": "pbs.example.net",
+   "Name": "pbs.example.net",
+   "URL": "https://192.0.2.138:8007",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 10
+  },
+  {
+   "Timestamp": 1790541889,
+   "ID": "pbs.example.net",
+   "Name": "pbs.example.net",
+   "URL": "https://192.0.2.138:8007",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 9
+  },
+  {
+   "Timestamp": 1790542189,
+   "ID": "pbs.example.net",
+   "Name": "pbs.example.net",
+   "URL": "https://192.0.2.138:8007",
+   "Protocol": "https",
+   "Online": true,
+   "StatusCode": 200,
+   "Latency": 10
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+[
+ {
+  "Domain": "*.example.com",
+  "Filename": "example.com",
+  "LastModifiedDate": "2026-08-07 14:51:58",
+  "ExpireDate": "2026-11-05 11:53:26",
+  "RemainingDays": 38,
+  "UseDNS": true,
+  "IsFallback": false
+ },
+ {
+  "Domain": "*.example.net",
+  "Filename": "example.net",
+  "LastModifiedDate": "2026-09-01 14:01:35",
+  "ExpireDate": "2026-11-30 11:03:02",
+  "RemainingDays": 63,
+  "UseDNS": true,
+  "IsFallback": false
+ }
+]

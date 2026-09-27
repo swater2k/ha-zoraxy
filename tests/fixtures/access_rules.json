@@ -1,0 +1,15 @@
+[
+ {
+  "ID": "default",
+  "Name": "Default",
+  "Desc": "Default access rule for all HTTP proxy hosts",
+  "BlacklistEnabled": false,
+  "WhitelistEnabled": false,
+  "WhitelistAllowLocalAndLoopback": false,
+  "TrustProxyHeadersOnly": false,
+  "WhiteListCountryCode": {},
+  "WhiteListIP": {},
+  "BlackListContryCode": {},
+  "BlackListIP": {}
+ }
+]

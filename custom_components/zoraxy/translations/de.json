@@ -1,0 +1,254 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Zoraxy",
+        "description": "Zoraxy-Reverse-Proxy verbinden. Nimm die interne Adresse der Weboberfläche, keine über einen Proxy veröffentlichte Domain.",
+        "data": {
+          "url": "Zoraxy-URL",
+          "username": "Benutzername",
+          "password": "Passwort",
+          "verify_ssl": "SSL-Zertifikat prüfen"
+        },
+        "data_description": {
+          "url": "Adresse der Zoraxy-Weboberfläche, z. B. {example_url}. Ohne Schema werden http und Port 8000 angenommen.",
+          "username": "Zoraxy-Admin-Benutzer. Zoraxy kennt keine eingeschränkten Rollen, die Integration hat daher vollen Zugriff.",
+          "password": "Wird im Konfigurationseintrag gespeichert und in der Diagnose geschwärzt.",
+          "verify_ssl": "Nur bei https relevant. Bei selbst signierten Zertifikaten ausschalten."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Erneut anmelden",
+        "description": "Zoraxy unter {url} hat die gespeicherten Zugangsdaten abgelehnt.",
+        "data": {
+          "username": "Benutzername",
+          "password": "Passwort"
+        }
+      },
+      "reconfigure": {
+        "title": "Zoraxy",
+        "description": "Verbindungseinstellungen ändern.",
+        "data": {
+          "url": "Zoraxy-URL",
+          "username": "Benutzername",
+          "password": "Passwort",
+          "verify_ssl": "SSL-Zertifikat prüfen"
+        },
+        "data_description": {
+          "url": "Adresse der Zoraxy-Weboberfläche, z. B. {example_url}. Ohne Schema werden http und Port 8000 angenommen.",
+          "username": "Zoraxy-Admin-Benutzer. Zoraxy kennt keine eingeschränkten Rollen, die Integration hat daher vollen Zugriff.",
+          "password": "Wird im Konfigurationseintrag gespeichert und in der Diagnose geschwärzt.",
+          "verify_ssl": "Nur bei https relevant. Bei selbst signierten Zertifikaten ausschalten."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Zoraxy nicht erreichbar oder die Adresse ist keine Zoraxy-Weboberfläche.",
+      "invalid_auth": "Benutzername oder Passwort abgelehnt.",
+      "invalid_response": "Zoraxy hat mit einem Fehler geantwortet.",
+      "unknown": "Unerwarteter Fehler"
+    },
+    "abort": {
+      "already_configured": "Diese Zoraxy-Instanz ist bereits eingerichtet.",
+      "reauth_successful": "Erneut angemeldet.",
+      "reconfigure_successful": "Neu konfiguriert.",
+      "different_instance": "Die Adresse gehört zu einer anderen Zoraxy-Instanz."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Zoraxy-Optionen",
+        "description": "Steuerfunktionen sind standardmäßig aus.",
+        "data": {
+          "scan_interval": "Abfrageintervall",
+          "uptime_interval": "Uptime-Intervall",
+          "control_hosts": "Steuerung: Proxy-Hosts",
+          "control_proxy": "Steuerung: gesamter Proxy",
+          "control_access": "Steuerung: Zugriffsregeln",
+          "control_streams": "Steuerung: Stream-Proxys",
+          "control_redirects": "Steuerung: Weiterleitungen",
+          "control_certificates": "Steuerung: Zertifikate"
+        },
+        "data_description": {
+          "scan_interval": "Wie oft Hosts, Statistik und Zertifikate gelesen werden.",
+          "uptime_interval": "Wie oft der Uptime-Monitor gelesen wird. Zoraxy prüft Upstreams alle 5 Minuten und liefert den Verlauf eines ganzen Tages – häufiger abzufragen kostet nur Datenverkehr.",
+          "control_hosts": "Je Proxy-Host ein Schalter zum Aktivieren und Deaktivieren.",
+          "control_proxy": "Ein Schalter, der den gesamten Reverse Proxy stoppt oder startet – alle Hosts auf einmal.",
+          "control_access": "Schalter für Blacklist und Whitelist je Zugriffsregel sowie die Aktionen IP sperren und IP entsperren.",
+          "control_streams": "Je TCP/UDP-Stream-Proxy ein Schalter.",
+          "control_redirects": "Je Weiterleitungsregel ein Schalter.",
+          "control_certificates": "Ein Button, der die ACME-Erneuerung sofort anstößt."
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "proxy_running": {
+        "name": "Proxy läuft"
+      },
+      "upstream_online": {
+        "name": "Upstream online"
+      },
+      "host_enabled": {
+        "name": "Aktiv"
+      },
+      "blacklist": {
+        "name": "Blacklist {name}"
+      },
+      "whitelist": {
+        "name": "Whitelist {name}"
+      },
+      "stream": {
+        "name": "Stream {name}"
+      },
+      "redirect": {
+        "name": "Weiterleitung {name}"
+      }
+    },
+    "sensor": {
+      "requests_today": {
+        "name": "Anfragen heute"
+      },
+      "errors_today": {
+        "name": "Fehler heute"
+      },
+      "valid_today": {
+        "name": "Erfolgreiche Anfragen heute"
+      },
+      "visitors_today": {
+        "name": "Besucher heute"
+      },
+      "received_today": {
+        "name": "Empfangen heute"
+      },
+      "sent_today": {
+        "name": "Gesendet heute"
+      },
+      "active_connections": {
+        "name": "Aktive Verbindungen"
+      },
+      "proxy_hosts": {
+        "name": "Proxy-Hosts"
+      },
+      "expired_certificates": {
+        "name": "Abgelaufene Zertifikate"
+      },
+      "started": {
+        "name": "Gestartet"
+      },
+      "version": {
+        "name": "Version"
+      },
+      "cpu": {
+        "name": "CPU-Auslastung"
+      },
+      "memory": {
+        "name": "Arbeitsspeicher"
+      },
+      "disk": {
+        "name": "Speicherplatz"
+      },
+      "certificate": {
+        "name": "Zertifikat {name}"
+      },
+      "latency": {
+        "name": "Latenz"
+      },
+      "availability": {
+        "name": "Verfügbarkeit"
+      },
+      "upstream": {
+        "name": "Upstream"
+      },
+      "status_code": {
+        "name": "Statuscode"
+      },
+      "last_check": {
+        "name": "Letzte Prüfung"
+      }
+    },
+    "switch": {
+      "proxy": {
+        "name": "Reverse Proxy"
+      },
+      "host": {
+        "name": "Aktiv"
+      },
+      "blacklist": {
+        "name": "Blacklist {name}"
+      },
+      "whitelist": {
+        "name": "Whitelist {name}"
+      },
+      "stream": {
+        "name": "Stream {name}"
+      },
+      "redirect": {
+        "name": "Weiterleitung {name}"
+      }
+    },
+    "button": {
+      "renew_certificates": {
+        "name": "Zertifikate erneuern"
+      }
+    }
+  },
+  "exceptions": {
+    "control_disabled": {
+      "message": "Diese Aktion ist in den Optionen von {title} ausgeschaltet."
+    },
+    "entry_not_found": {
+      "message": "Zoraxy-Eintrag nicht gefunden oder nicht geladen."
+    },
+    "entry_ambiguous": {
+      "message": "Mehrere Zoraxy-Instanzen eingerichtet, bitte eine auswählen."
+    },
+    "rule_not_found": {
+      "message": "Zugriffsregel {rule} nicht gefunden."
+    }
+  },
+  "services": {
+    "block_ip": {
+      "name": "IP sperren",
+      "description": "Setzt eine Adresse auf die Blacklist einer Zugriffsregel. Die Blacklist der Regel muss aktiv sein, damit das wirkt.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Zoraxy-Instanz",
+          "description": "Nur nötig, wenn mehrere Instanzen eingerichtet sind."
+        },
+        "ip": {
+          "name": "IP-Adresse",
+          "description": "Einzelne Adresse oder Bereich in CIDR-Schreibweise."
+        },
+        "rule": {
+          "name": "Zugriffsregel",
+          "description": "Name oder ID der Zugriffsregel; default ist die Regel, die alle Hosts nutzen."
+        },
+        "comment": {
+          "name": "Kommentar",
+          "description": "Notiz, die in Zoraxy angezeigt wird."
+        }
+      }
+    },
+    "unblock_ip": {
+      "name": "IP entsperren",
+      "description": "Entfernt eine Adresse von der Blacklist einer Zugriffsregel.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Zoraxy-Instanz",
+          "description": "Nur nötig, wenn mehrere Instanzen eingerichtet sind."
+        },
+        "ip": {
+          "name": "IP-Adresse",
+          "description": "Einzelne Adresse oder Bereich in CIDR-Schreibweise."
+        },
+        "rule": {
+          "name": "Zugriffsregel",
+          "description": "Name oder ID der Zugriffsregel; default ist die Regel, die alle Hosts nutzen."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+ "CPUUsage": 2.0100502512562812,
+ "UsedRAM": "131 MB",
+ "TotalRAM": "2048 MB",
+ "RAMUsage": 6.396484375,
+ "DiskUsed": 1004294144,
+ "DiskTotal": 6249086976,
+ "DiskUsage": 16.992592089496487,
+ "DiskPath": "/opt/zoraxy",
+ "HostOS": "linux",
+ "HostArch": "amd64",
+ "HostName": "zoraxy",
+ "Ready": true
+}

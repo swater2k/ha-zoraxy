@@ -1,0 +1,37 @@
+block_ip:
+  fields:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: zoraxy
+    ip:
+      required: true
+      example: "203.0.113.7"
+      selector:
+        text:
+    rule:
+      default: "default"
+      example: "default"
+      selector:
+        text:
+    comment:
+      example: "Brute force on auth"
+      selector:
+        text:
+
+unblock_ip:
+  fields:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: zoraxy
+    ip:
+      required: true
+      example: "203.0.113.7"
+      selector:
+        text:
+    rule:
+      default: "default"
+      example: "default"
+      selector:
+        text:
