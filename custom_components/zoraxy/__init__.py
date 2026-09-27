@@ -43,15 +43,22 @@ class ZoraxyRuntimeData:
 type ZoraxyConfigEntry = ConfigEntry[ZoraxyRuntimeData]
 
 
-def build_client(hass: HomeAssistant, data: dict) -> tuple[ZoraxyClient, aiohttp.ClientSession]:
+def build_client(
+    hass: HomeAssistant, data: dict, auto_cleanup: bool = True
+) -> tuple[ZoraxyClient, aiohttp.ClientSession]:
     """Eigene Session je Eintrag: Zoraxy arbeitet mit Session-Cookies.
 
     ``unsafe=True`` erlaubt Cookies auch für IP-Adressen, sonst verwirft
-    aiohttp das Session-Cookie bei ``http://192.0.2.10:8000``.
+    aiohttp das Session-Cookie bei ``http://192.0.2.10:8000``. Mit
+    ``auto_cleanup`` trennt HA die Session beim Entladen des Eintrags selbst;
+    schließen darf die Integration sie nicht.
     """
     verify_ssl = data.get(CONF_VERIFY_SSL, True)
     session = async_create_clientsession(
-        hass, verify_ssl=verify_ssl, cookie_jar=aiohttp.CookieJar(unsafe=True)
+        hass,
+        verify_ssl=verify_ssl,
+        auto_cleanup=auto_cleanup,
+        cookie_jar=aiohttp.CookieJar(unsafe=True),
     )
     client = ZoraxyClient(
         session, data[CONF_URL], data[CONF_USERNAME], data[CONF_PASSWORD], verify_ssl
@@ -69,11 +76,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ZoraxyConfigEntry) -> bo
     coordinator = ZoraxyCoordinator(
         hass, entry, client, entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
     )
-    try:
-        await coordinator.async_config_entry_first_refresh()
-    except Exception:
-        await session.close()
-        raise
+    await coordinator.async_config_entry_first_refresh()
 
     # Das Server-Gerät muss existieren, bevor Proxy-Hosts darauf verweisen.
     server = dr.async_get(hass).async_get_or_create(
@@ -92,10 +95,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ZoraxyConfigEntry) -> bo
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ZoraxyConfigEntry) -> bool:
-    unloaded = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
-    if unloaded:
-        await entry.runtime_data.session.close()
-    return unloaded
+    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
 
 async def async_remove_config_entry_device(

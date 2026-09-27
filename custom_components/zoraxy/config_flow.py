@@ -74,7 +74,8 @@ async def validate_input(
     hass: HomeAssistant, data: dict[str, Any]
 ) -> tuple[dict[str, str], str | None]:
     """Anmelden und die Host-ID lesen; liefert (Fehler, eindeutige ID)."""
-    client, session = build_client(hass, data)
+    # Kurzlebige Session nur für den Test; detach() statt close() (HA-Vorgabe).
+    client, session = build_client(hass, data, auto_cleanup=False)
     try:
         await client.login()
         status = await client.status()
@@ -88,7 +89,7 @@ async def validate_input(
         _LOGGER.exception("Unerwarteter Fehler bei der Validierung")
         return {"base": "unknown"}, None
     finally:
-        await session.close()
+        session.detach()
     host_uuid = ((status or {}).get("Option") or {}).get("HostUUID")
     return {}, host_uuid or data[CONF_URL]
 
