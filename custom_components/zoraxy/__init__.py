@@ -14,12 +14,26 @@ from homeassistant.const import (
     Platform,
 )
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers import config_validation as cv, device_registry as dr
+from homeassistant.helpers import (
+    config_validation as cv,
+    device_registry as dr,
+    entity_registry as er,
+)
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from homeassistant.helpers.typing import ConfigType
 
 from .api import ZoraxyClient
-from .const import CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL, DOMAIN
+from .const import (
+    CONF_CONTROL_ACCESS,
+    CONF_CONTROL_CERTIFICATES,
+    CONF_CONTROL_HOSTS,
+    CONF_CONTROL_PROXY,
+    CONF_CONTROL_REDIRECTS,
+    CONF_CONTROL_STREAMS,
+    CONF_SCAN_INTERVAL,
+    DEFAULT_SCAN_INTERVAL,
+    DOMAIN,
+)
 from .coordinator import ZoraxyCoordinator
 from .services import async_setup_services
 
@@ -90,6 +104,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ZoraxyConfigEntry) -> bo
         configuration_url=client.url,
     )
     entry.runtime_data = ZoraxyRuntimeData(coordinator, server.id, session)
+    _remove_replaced_entities(hass, entry)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
 
@@ -110,6 +125,50 @@ async def async_remove_config_entry_device(
         if identifier.startswith(prefix) and identifier[len(prefix) :] in data.hosts:
             return False
     return True
+
+
+def _replaced_by_option(entity: er.RegistryEntry, entry_id: str) -> str | None:
+    """Welche Option über diese Entität entscheidet – und in welche Richtung.
+
+    Liefert ``"+option"``, wenn die Entität nur bei aktiver Option existiert
+    (Schalter, Button), und ``"-option"``, wenn sie dann durch einen Schalter
+    ersetzt wird (Binärsensor). ``None`` für alle übrigen Entitäten.
+    """
+    uid = entity.unique_id.removeprefix(f"{entry_id}_")
+    if entity.domain == "button":
+        return f"+{CONF_CONTROL_CERTIFICATES}"
+    if entity.domain == "switch":
+        for prefix, option in (
+            ("proxy_switch", CONF_CONTROL_PROXY),
+            ("host_", CONF_CONTROL_HOSTS),
+            ("access_", CONF_CONTROL_ACCESS),
+            ("stream_", CONF_CONTROL_STREAMS),
+            ("redirect_", CONF_CONTROL_REDIRECTS),
+        ):
+            if uid.startswith(prefix):
+                return f"+{option}"
+    if entity.domain == "binary_sensor":
+        if uid.startswith("host_") and uid.endswith("_enabled"):
+            return f"-{CONF_CONTROL_HOSTS}"
+        if uid.startswith("access_"):
+            return f"-{CONF_CONTROL_ACCESS}"
+        if uid.startswith("stream_"):
+            return f"-{CONF_CONTROL_STREAMS}"
+        if uid.startswith("redirect_"):
+            return f"-{CONF_CONTROL_REDIRECTS}"
+    return None
+
+
+def _remove_replaced_entities(hass: HomeAssistant, entry: ZoraxyConfigEntry) -> None:
+    """Nach einer Optionsänderung verwaiste Schalter bzw. Binärsensoren entfernen."""
+    registry = er.async_get(hass)
+    for entity in er.async_entries_for_config_entry(registry, entry.entry_id):
+        rule = _replaced_by_option(entity, entry.entry_id)
+        if rule is None:
+            continue
+        enabled = option_enabled(entry, rule[1:])
+        if (rule[0] == "+" and not enabled) or (rule[0] == "-" and enabled):
+            registry.async_remove(entity.entity_id)
 
 
 def option_enabled(entry: ZoraxyConfigEntry, option: str) -> bool:

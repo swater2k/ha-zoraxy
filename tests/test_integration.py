@@ -9,7 +9,7 @@ from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 from homeassistant.exceptions import ServiceValidationError
-from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import device_registry as dr, entity_registry as er
 import pytest
 from pytest_homeassistant_custom_component.test_util.aiohttp import (
     AiohttpClientMocker,
@@ -323,3 +323,25 @@ def test_normalize_url() -> None:
     assert normalize_url("192.0.2.1") == "http://192.0.2.1:8000"
     assert normalize_url("http://192.0.2.1:9000/") == "http://192.0.2.1:9000"
     assert normalize_url("https://zoraxy.example.net/login.html") == "https://zoraxy.example.net"
+
+
+async def test_option_change_removes_replaced_entities(
+    hass: HomeAssistant, config_entry, aioclient_mock
+) -> None:
+    """Steuerung an: Binärsensor „Aktiv“ weicht dem Schalter – und umgekehrt."""
+    mock_api(aioclient_mock)
+    await _setup(hass, config_entry)
+    registry = er.async_get(hass)
+    assert registry.async_get("binary_sensor.adguard_example_net_enabled")
+
+    hass.config_entries.async_update_entry(config_entry, options={"control_hosts": True})
+    await hass.config_entries.async_reload(config_entry.entry_id)
+    await hass.async_block_till_done()
+    assert registry.async_get("binary_sensor.adguard_example_net_enabled") is None
+    assert registry.async_get("switch.adguard_example_net_enabled")
+
+    hass.config_entries.async_update_entry(config_entry, options={"control_hosts": False})
+    await hass.config_entries.async_reload(config_entry.entry_id)
+    await hass.async_block_till_done()
+    assert registry.async_get("switch.adguard_example_net_enabled") is None
+    assert registry.async_get("binary_sensor.adguard_example_net_enabled")
