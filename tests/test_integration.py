@@ -345,3 +345,26 @@ async def test_option_change_removes_replaced_entities(
     await hass.async_block_till_done()
     assert registry.async_get("switch.adguard_example_net_enabled") is None
     assert registry.async_get("binary_sensor.adguard_example_net_enabled")
+
+
+async def test_entity_ids_ignore_area(hass: HomeAssistant, config_entry, aioclient_mock) -> None:
+    """Neue Entitäten bekommen kein Bereichs-Präfix, auch wenn das Gerät einen Bereich hat."""
+    from homeassistant.helpers import area_registry as ar
+
+    mock_api(aioclient_mock)
+    await _setup(hass, config_entry)
+    area = ar.async_get(hass).async_create("Waschraum")
+    devices = dr.async_get(hass)
+    server = find_device(devices, config_entry.entry_id, config_entry.entry_id)
+    devices.async_update_device(server.id, area_id=area.id)
+
+    certs = load("cert_list")
+    certs.append(dict(certs[0], Domain="*.example.org", Filename="example.org"))
+    hosts = load("proxy_list")
+    hosts.append(dict(hosts[0], RootOrMatchingDomain="new.example.net"))
+    mock_api(aioclient_mock, {"/api/cert/list": certs, "/api/proxy/list": hosts})
+    await _refresh(hass, config_entry)
+
+    assert hass.states.get("sensor.zoraxy_certificate_example_org") is not None
+    assert hass.states.get("sensor.new_example_net_latency") is not None
+    assert not [e for e in hass.states.async_entity_ids() if "waschraum" in e]

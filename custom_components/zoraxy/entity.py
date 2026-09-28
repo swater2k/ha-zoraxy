@@ -14,6 +14,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .coordinator import ZoraxyCoordinator, ZoraxyData
+from .stable_id import StableEntityIdMixin
 
 if TYPE_CHECKING:
     from . import ZoraxyConfigEntry
@@ -42,7 +43,7 @@ def _via_server(entry: ZoraxyConfigEntry) -> dict[str, Any]:
     return {"via_device": (DOMAIN, entry.entry_id)}
 
 
-class ZoraxyEntity(CoordinatorEntity[ZoraxyCoordinator]):
+class ZoraxyEntity(StableEntityIdMixin, CoordinatorEntity[ZoraxyCoordinator]):
     """Entität am Server-Gerät."""
 
     _attr_has_entity_name = True
@@ -51,10 +52,11 @@ class ZoraxyEntity(CoordinatorEntity[ZoraxyCoordinator]):
         super().__init__(coordinator)
         self._entry = entry
         self._attr_unique_id = f"{entry.entry_id}_{key}"
+        self._id_prefix = DOMAIN
         self._attr_device_info = DeviceInfo(identifiers={(DOMAIN, entry.entry_id)})
 
 
-class ZoraxyHostEntity(CoordinatorEntity[ZoraxyCoordinator]):
+class ZoraxyHostEntity(StableEntityIdMixin, CoordinatorEntity[ZoraxyCoordinator]):
     """Entität an einem Proxy-Host-Gerät."""
 
     _attr_has_entity_name = True
@@ -70,6 +72,7 @@ class ZoraxyHostEntity(CoordinatorEntity[ZoraxyCoordinator]):
         self._entry = entry
         self.domain = domain
         self._attr_unique_id = f"{entry.entry_id}_host_{domain}_{key}"
+        self._id_prefix = domain
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, host_device_id(entry.entry_id, domain))},
             name=domain,
