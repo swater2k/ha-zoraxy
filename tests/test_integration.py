@@ -130,6 +130,106 @@ async def test_session_expiry_relogin(hass: HomeAssistant, config_entry, aioclie
     assert hass.states.get("sensor.zoraxy_requests_today").state == "1234"
 
 
+def _replace(aioclient_mock: AiohttpClientMocker, method: str, path: str, side_effect) -> None:
+    """Ersetzt die Antwort eines Endpunkts durch eine Funktion."""
+    aioclient_mock._mocks = [
+        m
+        for m in aioclient_mock._mocks
+        if not (m.method == method.lower() and str(m._url).endswith(path))
+    ]
+    register = aioclient_mock.get if method == "GET" else aioclient_mock.post
+    register(f"{URL}{path}", side_effect=side_effect)
+
+
+def _login_answers(statuses):
+    """Login-Antworten nacheinander: Statuscode oder "OK"."""
+    answers = iter(statuses)
+
+    async def _login(method, url, data):
+        answer = next(answers, "OK")
+        if answer == "OK":
+            return AiohttpClientMockResponse(method, url, text=json.dumps("OK"))
+        return AiohttpClientMockResponse(method, url, status=answer, text="Forbidden")
+
+    return _login
+
+
+def _overview_answers(statuses):
+    answers = iter(statuses)
+
+    async def _overview(method, url, data):
+        status = next(answers, 200)
+        if status != 200:
+            return AiohttpClientMockResponse(method, url, status=status, text=LOGIN_PAGE)
+        return AiohttpClientMockResponse(method, url, text=json.dumps(load("overview")))
+
+    return _overview
+
+
+async def test_relogin_csrf_rejected_retries_with_fresh_cookies(
+    hass: HomeAssistant, config_entry, aioclient_mock, caplog
+) -> None:
+    """Abgelaufenes CSRF-Cookie: erster Login 403, zweiter mit frischen Cookies klappt."""
+    mock_api(aioclient_mock)
+    await _setup(hass, config_entry)
+
+    mock_api(aioclient_mock)
+    _replace(aioclient_mock, "GET", "/api/stats/overview", _overview_answers([307]))
+    _replace(aioclient_mock, "POST", "/api/auth/login", _login_answers([403]))
+    await _refresh(hass, config_entry)
+
+    assert config_entry.runtime_data.coordinator.last_update_success
+    assert len(_calls(aioclient_mock, "/api/auth/login")) == 2
+    assert len(_calls(aioclient_mock, "/login.html")) == 2
+    assert "HTTP 403" in caplog.text
+    assert not [
+        f for f in hass.config_entries.flow.async_progress() if f["context"]["source"] == "reauth"
+    ]
+
+
+async def test_relogin_csrf_rejected_twice_is_temporary(
+    hass: HomeAssistant, config_entry, aioclient_mock, caplog
+) -> None:
+    """Login scheitert dauerhaft an CSRF: Abruf schlägt fehl, aber kein Reauth."""
+    mock_api(aioclient_mock)
+    await _setup(hass, config_entry)
+
+    mock_api(aioclient_mock)
+    _replace(aioclient_mock, "GET", "/api/stats/overview", _overview_answers([307]))
+    _replace(aioclient_mock, "POST", "/api/auth/login", _login_answers([403, 403, 403]))
+    await _refresh(hass, config_entry)
+
+    assert not config_entry.runtime_data.coordinator.last_update_success
+    assert config_entry.state is ConfigEntryState.LOADED
+    assert not [
+        f for f in hass.config_entries.flow.async_progress() if f["context"]["source"] == "reauth"
+    ]
+    assert "Zugangsdaten nicht abgelehnt" in caplog.text
+
+    # Beim nächsten Abruf klappt es wieder, ohne Zutun.
+    mock_api(aioclient_mock)
+    await _refresh(hass, config_entry)
+    assert config_entry.runtime_data.coordinator.last_update_success
+    assert hass.states.get("sensor.zoraxy_requests_today").state == "1234"
+
+
+async def test_session_rejected_after_login_is_temporary(
+    hass: HomeAssistant, config_entry, aioclient_mock
+) -> None:
+    """Login klappt, die Anfrage wird trotzdem abgewiesen: kein Reauth."""
+    mock_api(aioclient_mock)
+    await _setup(hass, config_entry)
+
+    mock_api(aioclient_mock)
+    _replace(aioclient_mock, "GET", "/api/stats/overview", _overview_answers([307, 307, 307]))
+    await _refresh(hass, config_entry)
+
+    assert not config_entry.runtime_data.coordinator.last_update_success
+    assert not [
+        f for f in hass.config_entries.flow.async_progress() if f["context"]["source"] == "reauth"
+    ]
+
+
 async def test_login_rejected_starts_reauth(
     hass: HomeAssistant, config_entry, aioclient_mock
 ) -> None:

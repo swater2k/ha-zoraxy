@@ -16,7 +16,7 @@ A custom integration for the [Zoraxy](https://github.com/tobychui/zoraxy) revers
 
 ## How it connects
 
-Zoraxy has no token-based API. The integration talks to the same internal API as the web interface: it loads the login page for the CSRF token, signs in with username and password and keeps the session cookie. When the session expires or Zoraxy restarts, it signs in again automatically.
+Zoraxy has no token-based API. The integration talks to the same internal API as the web interface: it loads the login page for the CSRF token, signs in with username and password and keeps the session cookie. When the session expires or Zoraxy restarts, it signs in again automatically. If that sign-in fails because of the session or the CSRF token (Zoraxy renews its CSRF cookie every 12 hours), it discards its cookies and retries once; if it still fails, the entities are unavailable until the next poll. Home Assistant only asks you to sign in again when Zoraxy actually rejects the username or password.
 
 This has two consequences:
 

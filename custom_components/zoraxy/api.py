@@ -4,16 +4,26 @@ Zoraxy hat keine Token-API. Die Weboberfläche meldet sich per Session-Cookie
 an und schickt bei jedem POST den CSRF-Token aus ``login.html`` mit – genau
 das macht dieser Client auch. Läuft die Session ab, leitet Zoraxy auf die
 Login-Seite um; der Client meldet sich dann einmal neu an und wiederholt.
+
+Nur wenn Zoraxy die Zugangsdaten ausdrücklich ablehnt (Antwort mit
+Fehlertext), gilt das als ``ZoraxyAuthError`` und HA fordert eine neue
+Anmeldung an. Scheitert der Login an Sitzung oder CSRF-Token (403, 401,
+Umleitung), ist das ein vorübergehender Fehler: Cookies verwerfen, einmal neu
+versuchen, sonst ``ZoraxyConnectionError``. Zoraxy legt das CSRF-Cookie fest
+für 12 Stunden an; danach passt ein gespeicherter Token nicht mehr.
 """
 
 from __future__ import annotations
 
 import json
+import logging
 import re
 from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 
 import aiohttp
+
+_LOGGER = logging.getLogger(__name__)
 
 REQUEST_TIMEOUT = aiohttp.ClientTimeout(total=30)
 _TOKEN_RE = re.compile(r'name="zoraxy\.csrf\.Token"\s+content="([^"]+)"')
@@ -42,6 +52,10 @@ class ZoraxyNotFoundError(ZoraxyError):
 
 class _SessionExpired(Exception):
     """Intern: neu anmelden und wiederholen."""
+
+    def __init__(self, reason: str) -> None:
+        super().__init__(reason)
+        self.reason = reason
 
 
 def normalize_url(url: str, default_port: int = 8000) -> str:
@@ -77,6 +91,25 @@ class ZoraxyClient:
     # --- Anmeldung ----------------------------------------------------- #
 
     async def login(self) -> None:
+        """Anmelden; bei Problemen mit Sitzung oder CSRF einmal mit frischen Cookies."""
+        try:
+            await self._login_once()
+        except _SessionExpired as err:
+            _LOGGER.warning(
+                "Zoraxy-Login nicht angenommen (%s), neuer Versuch mit frischen Cookies",
+                err.reason,
+            )
+            self._session.cookie_jar.clear()
+            self._token = None
+            try:
+                await self._login_once()
+            except _SessionExpired as err2:
+                self._token = None
+                raise ZoraxyConnectionError(
+                    f"Login nicht möglich: {err2.reason} (Zugangsdaten nicht abgelehnt)"
+                ) from err2
+
+    async def _login_once(self) -> None:
         try:
             async with self._session.get(
                 f"{self.url}/login.html", ssl=self._ssl, timeout=REQUEST_TIMEOUT
@@ -95,8 +128,6 @@ class ZoraxyClient:
                 {"username": self._username, "password": self._password},
                 None,
             )
-        except _SessionExpired as err:
-            raise ZoraxyAuthError("Anmeldung abgelehnt") from err
         except ZoraxyRequestError as err:
             self._token = None
             raise ZoraxyAuthError(str(err)) from err
@@ -131,10 +162,11 @@ class ZoraxyClient:
             raise ZoraxyConnectionError(f"{method} {path}: {err}") from err
 
         if status in _REDIRECTS or status == 401:
-            raise _SessionExpired
+            raise _SessionExpired(f"{method} {path}: HTTP {status}")
         if status == 403:
-            # Ungültiger CSRF-Token – etwa nach einem Neustart von Zoraxy.
-            raise _SessionExpired
+            # Ungültiger CSRF-Token – nach Ablauf des CSRF-Cookies (12 h)
+            # oder einem Neustart von Zoraxy.
+            raise _SessionExpired(f"{method} {path}: HTTP 403")
         if status == 404:
             raise ZoraxyNotFoundError(f"{path} nicht gefunden")
         if status >= 400:
@@ -144,7 +176,7 @@ class ZoraxyClient:
             return None
         if text.startswith("<"):
             # HTML statt JSON: Zoraxy hat die Login-Seite ausgeliefert.
-            raise _SessionExpired
+            raise _SessionExpired(f"{method} {path}: Login-Seite statt JSON")
         try:
             result = json.loads(text)
         except ValueError as err:
@@ -169,7 +201,10 @@ class ZoraxyClient:
         try:
             return await self._send(method, path, data, params)
         except _SessionExpired as err:
-            raise ZoraxyAuthError(f"{path}: Sitzung wird nicht akzeptiert") from err
+            # Der Login hat geklappt, also stimmen die Zugangsdaten: kein Reauth.
+            raise ZoraxyConnectionError(
+                f"{path}: Sitzung wird nach Neuanmeldung nicht akzeptiert ({err.reason})"
+            ) from err
 
     # --- Lesen ------------------------------------------------------------ #
 
